@@ -9,6 +9,9 @@
       </h5>
       <p><%= comment.body %></p>
     </div>
+
+    <!-- allow only author/owner of comment to edit/destroy-->
+
     <div>
       <% if current_user == comment.author %>
         <%= link_to edit_comment_path(comment), class: "btn btn-link btn-sm text-muted" do %>
