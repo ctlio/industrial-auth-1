@@ -20,6 +20,7 @@ class PhotosController < ApplicationController
 
   # GET /photos/1/edit
   def edit
+    authorize @photo
   end
 
   # POST /photos or /photos.json
@@ -40,6 +41,8 @@ class PhotosController < ApplicationController
 
   # PATCH/PUT /photos/1 or /photos/1.json
   def update
+    authorize @photo
+    
     respond_to do |format|
       if @photo.update(photo_params)
         format.html { redirect_to @photo, notice: "Photo was successfully updated." }
@@ -53,6 +56,7 @@ class PhotosController < ApplicationController
 
   # DELETE /photos/1 or /photos/1.json
   def destroy
+    authorize @photo
       @photo.destroy
       
       respond_to do |format|
@@ -73,12 +77,13 @@ class PhotosController < ApplicationController
       end
     end
 
-    def ensure_user_is_authorized
-      if !PhotoPolicy.new(current_user, @photo).show?
-        raise Pundit::NotAuthorizedError, "not allowed"
-      end
-    end
-
+    
+    #def ensure_user_is_authorized
+      #if !PhotoPolicy.new(current_user, @photo).show?
+        #raise Pundit::NotAuthorizedError, "not allowed"
+      #end
+    #end
+    
     # Only allow a list of trusted parameters through.
     def photo_params
       params.require(:photo).permit(:image, :comments_count, :likes_count, :caption, :owner_id)

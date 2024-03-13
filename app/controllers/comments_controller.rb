@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: %i[ show edit update destroy ]
   before_action :is_an_authorized_user, only: [:create]
+  #before_action :ensure_user_is_authorized, only: [:edit]
 
   # GET /comments or /comments.json
   def index
@@ -71,9 +72,14 @@ class CommentsController < ApplicationController
       end
     end
 
+    def ensure_user_is_authorized
+      if !CommentPolicy.new(current_user, @comments).edit?
+        raise Pundit::NotAuthorizedError, "not allowed"
+      end
+    end
+
     # Only allow a list of trusted parameters through.
     def comment_params
       params.require(:comment).permit(:author_id, :photo_id, :body)
     end
 end
-
