@@ -13,7 +13,15 @@ class UserPolicy
   end
 
   def feed?
-    true
+    user == current_user
+  end
+
+  def discover?
+   feed?
+  end
+
+  def liked?
+    feed?
   end
   
 end
